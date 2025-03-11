@@ -15,9 +15,11 @@ To use the package, implement the `Enumerable` interface in your enum classes. H
 
 ```php
 use Wowpack\Enumeration\Enumerable;
+use Wowpack\Enumeration\InteractsWithEnum;
 
-class MyEnum implements Enumerable
+enum MyEnum implements Enumerable
 {
+    use InteractsWithEnum;
     // Implement the required methods...
 }
 ```
