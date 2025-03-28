@@ -1,18 +1,87 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use Illuminate\Support\Collection;
 use Wowpack\Enumeration\Enumerable;
 
 class MyEnum implements Enumerable
 {
-    // Implement the required methods for testing...
+    private const ENUM_CASES = [
+        ['name' => 'some_key', 'value' => 'some_value'],
+        ['name' => 'another_key', 'value' => 'another_value'],
+    ];
+
+    public static function all(): Collection
+    {
+        return Collection::make(self::ENUM_CASES);
+    }
+
+    public static function keys(): array
+    {
+        return array_column(self::ENUM_CASES, 'name');
+    }
+
+    public static function values(): array
+    {
+        return array_column(self::ENUM_CASES, 'value');
+    }
+
+    public static function assoc(): array
+    {
+        return array_column(self::ENUM_CASES, 'value', 'name');
+    }
+
+    public static function get(string $key, $default = null): mixed
+    {
+        foreach (self::ENUM_CASES as $case) {
+            if ($case['name'] === $key) {
+                return $case;
+            }
+        }
+        return $default;
+    }
+
+    public static function has(string $key): bool
+    {
+        return !empty(self::get($key, null));
+    }
+
+    public static function exists(int|string $value): bool
+    {
+        foreach (self::ENUM_CASES as $case) {
+            if ($case['value'] === $value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static function count(): int
+    {
+        return count(self::ENUM_CASES);
+    }
+
+    public static function toArray(): array
+    {
+        return self::ENUM_CASES;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function value(): string|int
+    {
+        return $this->value;
+    }
 }
 
 class EnumerableTest extends TestCase
 {
     public function testAll()
     {
-        $this->assertIsArray(MyEnum::all());
+        $this->assertInstanceOf(Collection::class, MyEnum::all());
     }
 
     public function testKeys()
